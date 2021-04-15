@@ -1,0 +1,46 @@
+buildscript {
+    // build.gradle 에서 사용할 전역변수 설정
+    ext {
+        //
+    }
+
+    // 라이브러리를 어느 원격저장소에서 받아올 것인지
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath('org.springframework.boot:spring-boot-gradle-plugin:2.1.7.RELEASE')
+    }
+}
+
+// 자바와 스프링부트를 사용하기 위한 플러그인
+apply plugin : 'java'
+apply plugin : 'eclipse'
+apply plugin : 'org.springframework.boot'
+apply plugin : 'io.spring.dependency-management'
+
+// 프로젝트 정보
+group 'org.example'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+// 왜 또 써야하지?
+repositories {
+    mavenCentral()
+}
+
+// 개발에 필요한 의존성들을 선언
+dependencies {
+    // 버전을 명시하지 않아야 ext에 선언한 전역변수가 적용됨
+    compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    // 이건뭐람
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
