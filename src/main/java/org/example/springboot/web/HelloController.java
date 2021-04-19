@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController // == @ResponseBody : 반환값을 JSON 형태로 만들어줌
 public class HelloController {
 
-    @GetMapping("/hello")   // HTTP GET요청을 받아들인다 == @RequestMapping(method=Request)
+    // HTTP GET요청을 받아들인다 == @RequestMapping(method=Request)
+    @GetMapping("/")
     public String hello(){
         return "hello";
     }
