@@ -1,3 +1,17 @@
 # git untracked
-.gradle
+
+# package files
+.jar
+.war
+.ear
+
+# IJ
 .idea
+build
+
+# gradle
+.gradle
+/build/
+
+# Java
+*.class
