@@ -1,6 +1,6 @@
 buildscript {
     ext {   // build.gradle 에서 사용할 전역변수 설정
-        springBootVersion = '2.1.9.RELEASE'
+        springBootVersion = "2.1.9.RELEASE"
     }
     repositories {      // 라이브러리를 어느 원격저장소에서 받아올 것인지
         mavenCentral()
@@ -22,7 +22,7 @@ apply plugin: 'io.spring.dependency-management'
 // 프로젝트 정보
 group 'org.example'
 version '1.0-SNAPSHOT'
-sourceCompatibility = '1.8'
+// sourceCompatibility = '1.8'
 
 // 왜 또 써야하지?
 repositories {
@@ -39,10 +39,10 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-mustache')
     // compile('org.springframework.boot:spring-boot-starter-oauth2-client')
 
-    // compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')    // spring Data JPA
+    compile('com.h2database:h2')    // 인메모리 RDB. 앱을 재시작할 때마다 초기화됨(테스트용)
     // compile('org.springframework.session:spring-session-jdbc')
     // compile("org.mariadb.jdbc:mariadb-java-client")
-    // compile('com.h2database:h2')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     // testCompile("org.springframework.security:spring-security-test")
