@@ -24,6 +24,9 @@ public class PostsRepositoryTest {
         String title = "제목";
         String content = "내용입니다";
 
+        /*
+        *    Posts.builder()
+        * */
         postsRepository.save(
                 Posts.builder()
                         .title(title)

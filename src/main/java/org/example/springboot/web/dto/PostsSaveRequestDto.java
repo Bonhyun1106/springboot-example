@@ -25,9 +25,6 @@ public class PostsSaveRequestDto {
                 .author(author)
                 .build();
     }
-
-
-
     /*
         view layer를 위한 객체
         view - controller - service 간 전달 데이터를 담는다
