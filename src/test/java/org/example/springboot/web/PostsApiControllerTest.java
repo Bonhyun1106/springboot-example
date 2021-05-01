@@ -1,9 +1,11 @@
 package org.example.springboot.web;
 
+import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.assertj.core.api.Assertions;
 import org.example.springboot.domain.posts.Posts;
 import org.example.springboot.domain.posts.PostsRepository;
 import org.example.springboot.web.dto.PostsSaveRequestDto;
+import org.example.springboot.web.dto.PostsUpdateDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -37,7 +42,6 @@ public class PostsApiControllerTest {
 
     @Test
     public void Posts_등록(){
-
         // given
         String title = "title";
         String content = "contents";
@@ -57,9 +61,58 @@ public class PostsApiControllerTest {
         Assertions.assertThat(posts.get(0).getContent()).isEqualTo(content);
     }
 
+    @Test
+    public void posts_수정(){
+        PostsSaveRequestDto insertPost = PostsSaveRequestDto.builder().title("제목").content("내용").author("작가").build();
+        Posts savedPost =  postsRepository.save(insertPost.toEntity());
+
+        // given
+        Long updateId = savedPost.getId();
+        String expendTitle = "수정된 제목";
+        String expendContent = "수정된 내용입니다";
+        PostsUpdateDto requestDto = PostsUpdateDto.builder().title(expendTitle).content(expendContent).build();
+
+        // when
+        String url = "http://localhost:" + port + "/api/v1/post/" + updateId;
+        HttpEntity<PostsUpdateDto> requestEntity = new HttpEntity<>(requestDto);
+
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
+
+        // then
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        List<Posts> postsList = postsRepository.findAll();
+        String resultTitle = postsList.get(0).getTitle();
+        String resultContent = postsList.get(0).getContent();
+
+        Assertions.assertThat(resultTitle).isEqualTo(expendTitle);
+        Assertions.assertThat(resultContent).isEqualTo(expendContent);
+    }
+
+    @Test
+    public void baseTimeEntity_등록(){
+        LocalDateTime now = LocalDateTime.now();
+
+        // given
+        postsRepository.save(PostsSaveRequestDto.builder().title("제목").content("내용").author("작가").build().toEntity());
+
+        // when
+        List<Posts> posts = postsRepository.findAll();
+
+        // then
+        Posts post = posts.get(0);
+
+        System.out.println("----------create date : " + post.getCreateDate());
+        System.out.println("----------modified date : " + post.getModificationDate());
+
+        Assertions.assertThat(post.getCreateDate()).isAfter(now);
+        Assertions.assertThat(post.getModificationDate()).isAfter(now);
+    }
+
     /*
         @RunWith : JUnit 테스트를 실행할 때 내장된 Ruuner를 실행한다
-        @SpringBootTest : 여러 단위 테스트를 하나의 통합된 테스트로 수행할 떄 사용한다
+        @SpringBootTest : 여러 단위 테스트를 하나의 통합된 테스트로 수행할 때 사용한다
 
 
         ERROR Note
