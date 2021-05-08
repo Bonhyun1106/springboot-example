@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     // HTTP GET요청을 받아들인다 == @RequestMapping(method=Request)
-    @GetMapping("/")
+    @GetMapping("/hello")
     public String hello(){
         return "hello";
     }

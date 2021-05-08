@@ -3,12 +3,15 @@ package org.example.springboot.services.posts;
 import lombok.RequiredArgsConstructor;
 import org.example.springboot.domain.posts.Posts;
 import org.example.springboot.domain.posts.PostsRepository;
+import org.example.springboot.web.dto.PostsListResponseDto;
 import org.example.springboot.web.dto.PostsResponseDto;
 import org.example.springboot.web.dto.PostsSaveRequestDto;
 import org.example.springboot.web.dto.PostsUpdateDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -16,6 +19,16 @@ public class PostsService {
 
     // 레파지토리 연결
     private final PostsRepository postsRepository;
+
+    /**
+     * 전체 글 조회
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findAllDesc(){
+        // db 조회 결과를 PostsResponseDto으로 변환 후 List에 담아 반환
+        return postsRepository.findAllDesc().stream().map(PostsListResponseDto::new).collect(Collectors.toList());
+    }
 
     /**
      * 글 등록
